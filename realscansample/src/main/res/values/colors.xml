@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#00A0E9</color>
+    <color name="colorButton">#00A0E9</color>
+    <color name="colorPrimaryDark">#1B3574</color>
+    <color name="colorAccent">#1B3574</color>
+    <color name="colorBorder">#59D5D5D5</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colordarkmode">#303030</color>
+    <color name="colorUltramarineBlue">#1B3574</color>
+    <color name="colorDeepSkyBlue">#00A0E9</color>
+</resources>

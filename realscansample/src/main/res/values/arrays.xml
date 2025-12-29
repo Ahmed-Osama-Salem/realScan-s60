@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="imageformatlist">
+        <item>JPEG</item>
+        <item>BMP</item>
+        <item>WSQ</item>
+        <item>PGM</item>
+        <item>ISO/IEC 19794-4(Jpeg2000)</item>
+    </string-array>
+    <string-array name="imageformatlist_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+    <string-array name="dpilist">
+        <item>100 dpi</item>
+        <item>200 dpi</item>
+        <item>300 dpi</item>
+        <item>400 dpi</item>
+        <item>500 dpi</item>
+    </string-array>
+    <string-array name="dpilist_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+
+    <string-array name="theme_mode">
+        <item>@string/Theme_light</item>
+        <item>@string/Theme_dark</item>
+    </string-array>
+
+    <string-array name="theme_mode_value">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="minimumfingercount">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+    <string-array name="minimumfingercount_value">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+    <string-array name="fingercount_D">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="fingercount_D_value">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="hand_select">
+        <item>@string/list_left_hand</item>
+        <item>@string/list_right_hand</item>
+    </string-array>
+    <string-array name="hand_select_value">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="left_fingerselect">
+        <item>@string/finger_little</item>
+        <item>@string/finger_ringer</item>
+        <item>@string/finger_middle</item>
+        <item>@string/finger_index</item>
+        <item>@string/finger_thumb</item>
+    </string-array>
+    <string-array name="left_fingerselect_value">
+        <item>10</item>
+        <item>9</item>
+        <item>8</item>
+        <item>7</item>
+        <item>6</item>
+    </string-array>
+    <string-array name="right_fingerselect">
+        <item>@string/finger_thumb</item>
+        <item>@string/finger_index</item>
+        <item>@string/finger_middle</item>
+        <item>@string/finger_ringer</item>
+        <item>@string/finger_little</item>
+    </string-array>
+    <string-array name="right_fingerselect_value">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+    <string-array name="fingerselect">
+        <item>@string/right_finger_thumb</item>
+        <item>@string/right_finger_index</item>
+        <item>@string/right_finger_middle</item>
+        <item>@string/right_finger_ringer</item>
+        <item>@string/right_finger_little</item>
+        <item>@string/left_finger_thumb</item>
+        <item>@string/left_finger_index</item>
+        <item>@string/left_finger_middle</item>
+        <item>@string/left_finger_ringer</item>
+        <item>@string/left_finger_little</item>
+    </string-array>
+    <string-array name="fingerselect_value">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+    </string-array>
+    <string-array name="fingerselect_d">
+        <item>@string/left_finger_thumb</item>
+        <item>@string/right_finger_thumb</item>
+    </string-array>
+    <string-array name="fingerselect_d_value">
+        <item>6</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="empty_array"/>
+    <string-array name="roll_direction">
+        <item>Left to Right</item>
+        <item>Right to Left</item>
+        <item>Auto</item>
+        <item>Auto_M</item>
+    </string-array>
+    <string-array name="roll_direction_value">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string-array name="sequence_check_capture_mode">
+        <item>Flat One</item>
+        <item>Roll Finger</item>
+    </string-array>
+    <string-array name="sequence_check_capture_mode_value">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <array name="autosize_text_sizes">
+        <item>6sp</item>
+        <item>10sp</item>
+        <item>14sp</item>
+        <item>18sp</item>
+    </array>
+    <string-array name="custom_size_capture_mode">
+        <item>Off</item>
+        <item>Flat One</item>
+        <item>Flat Two</item>
+        <item>Left Four</item>
+        <item>Right Four</item>
+        <item>Roll</item>
+        <item>Two Thumb</item>
+        <item>Flat One(Ex)</item>
+        <item>Flat Two(Ex)</item>
+    </string-array>
+    <string-array name="preview_qualitry_mode">
+        <item>Preview-High</item>
+        <item>Preview-Middle</item>
+        <item>Preview-Low</item>
+    </string-array>
+    <string-array name="custom_size_capture_mode_value">
+        <item>0</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>18</item>
+        <item>19</item>
+    </string-array>
+    <string-array name="preview_quality_value">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="s60_ext_bright_calc_mode">
+        <item>Full</item>
+        <item>SubSample</item>
+        <item>Center</item>
+    </string-array>
+    <string-array name="s60_ext_bright_calc_mode_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="s60_sensitive_mode_level">
+        <item>Default</item>
+        <item>Enhanced</item>
+    </string-array>
+    <string-array name="s60_sensitive_mode_level_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="mode_led_options_1">
+        <item>ON</item>
+        <item>OFF</item>
+    </string-array>
+
+    <string-array name="mode_led_values_1">
+        <item>1</item>
+        <item>0</item>
+    </string-array>
+
+    <string-array name="mode_led_options_2">
+        <item>ALL</item>
+        <item>LEFT_FINGER4</item>
+        <item>RIGHT_FINGER4</item>
+        <item>TWO_THUMB</item>
+        <item>ROLL</item>
+    </string-array>
+
+    <string-array name="mode_led_values_2">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+
+    <string-array name="mode_led_options_3">
+        <item>RED</item>
+        <item>GREEN</item>
+        <item>BLUE</item>
+    </string-array>
+
+    <string-array name="mode_led_values_3">
+        <item>1</item>
+        <item>2</item>
+        <item>4</item>
+    </string-array>
+</resources>

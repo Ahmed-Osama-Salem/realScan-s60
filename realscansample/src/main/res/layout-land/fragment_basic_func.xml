@@ -1,0 +1,625 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <!-- TODO: Update blank fragment layout -->
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.realscanseries.rssample.MainActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/basicfunctionlayout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="10"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.1"/>
+            <!-- device info & button layout-->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3.8"
+                android:weightSum="10"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:orientation="vertical"
+                    android:layout_weight="0.5">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeStepGranularity="1sp"
+                        app:autoSizeMinTextSize="2sp"
+                        app:autoSizeMaxTextSize="10sp"
+                        android:text="@string/tv_deviceinfo"/>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:orientation="horizontal"
+                    android:layout_weight="1"
+                    android:weightSum="10">
+
+                    <TextView
+                        android:id="@+id/devicename"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2.4"
+                        android:gravity="left|bottom"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeStepGranularity="1sp"
+                        app:autoSizeMinTextSize="2sp"
+                        app:autoSizeMaxTextSize="10sp"
+                        android:text="@string/tv_devicename" />
+
+                    <TextView
+                        android:id="@+id/tvDevice"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center|bottom"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeStepGranularity="1sp"
+                        app:autoSizeMinTextSize="2sp"
+                        app:autoSizeMaxTextSize="10sp"
+                        android:background="@drawable/underline"
+                        android:layout_weight="4.6"/>
+
+                    <Button
+                        android:id="@+id/btSelectDevice"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|bottom"
+                        android:layout_toEndOf="@+id/tvDevice"
+                        android:background="@drawable/button_round"
+                        android:stateListAnimator="@null"
+                        android:text="Select Device"
+                        android:visibility="invisible"
+                        android:layout_weight="3"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:orientation="horizontal"
+                    android:layout_weight="1"
+                    android:weightSum="10">
+
+                    <TextView
+                        android:id="@+id/sdkInfo"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2.4"
+                        android:gravity="left|bottom"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeStepGranularity="1sp"
+                        app:autoSizeMinTextSize="2sp"
+                        app:autoSizeMaxTextSize="10sp"
+                        android:text="@string/tv_sdkinfo" />
+
+                    <TextView
+                        android:id="@+id/tvsdkinfo"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center|bottom"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeStepGranularity="1sp"
+                        app:autoSizeMinTextSize="2sp"
+                        app:autoSizeMaxTextSize="10sp"
+                        android:background="@drawable/underline"
+                        android:layout_weight="4.6"/>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:orientation="horizontal"
+                    android:layout_weight="1"
+                    android:weightSum="10">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:text="@string/tv_modename"
+                        android:id="@+id/modeTextView"
+                        android:gravity="left|bottom"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeStepGranularity="1sp"
+                        app:autoSizeMinTextSize="2sp"
+                        app:autoSizeMaxTextSize="10sp"
+                        android:layout_weight="2.4"/>
+
+                    <TextView
+                        android:id="@+id/tvMode"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center|bottom"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeStepGranularity="1sp"
+                        app:autoSizeMinTextSize="2sp"
+                        app:autoSizeMaxTextSize="10sp"
+                        android:background="@drawable/underline"
+                        android:layout_weight="4.6"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:weightSum="10">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
+                        <Button
+                            android:id="@+id/btSelectMode"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center|bottom"
+                            android:layout_toEndOf="@+id/tvDevice"
+                            android:background="@drawable/buttonselector"
+                            android:stateListAnimator="@null"
+                            app:autoSizeTextType="uniform"
+                            app:autoSizeStepGranularity="1sp"
+                            app:autoSizeMinTextSize="2sp"
+                            app:autoSizeMaxTextSize="10sp"
+                            android:text="@string/bt_capturemode"
+                            android:layout_weight="9"/>
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.325"/>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:orientation="vertical"
+                    android:layout_weight="0.6">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/tv_capturefunction"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeStepGranularity="1sp"
+                        app:autoSizeMinTextSize="2sp"
+                        app:autoSizeMaxTextSize="10sp"
+                        android:gravity="center"/>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:orientation="horizontal"
+                    android:layout_weight="5.5"
+                    android:weightSum="10">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="10"
+                        android:orientation="vertical"
+                        android:weightSum="10">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="0.6"/>
+                        <Button
+                            android:id="@+id/btStartPreview"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1.35"
+                            android:background="@drawable/buttonselector"
+                            android:stateListAnimator="@null"
+                            app:autoSizeTextType="uniform"
+                            app:autoSizeStepGranularity="1sp"
+                            app:autoSizeMinTextSize="2sp"
+                            app:autoSizeMaxTextSize="10sp"
+                            android:text="@string/bt_previewcapture" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="0.6"/>
+                        <Button
+                            android:id="@+id/btManualCapture"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1.35"
+                            android:enabled="false"
+                            android:background="@drawable/buttonselector"
+                            android:stateListAnimator="@null"
+                            app:autoSizeTextType="uniform"
+                            app:autoSizeStepGranularity="1sp"
+                            app:autoSizeMinTextSize="2sp"
+                            app:autoSizeMaxTextSize="10sp"
+                            android:text="@string/bt_manualcapture" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="0.6"/>
+                        <Button
+                            android:id="@+id/btAutoCapture"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1.35"
+                            android:background="@drawable/buttonselector"
+                            android:stateListAnimator="@null"
+                            app:autoSizeTextType="uniform"
+                            app:autoSizeStepGranularity="1sp"
+                            app:autoSizeMinTextSize="2sp"
+                            app:autoSizeMaxTextSize="10sp"
+                            android:text="@string/bt_autocapture" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="0.6"/>
+                        <Button
+                            android:id="@+id/btAbortCapture"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1.35"
+                            android:background="@drawable/buttonselector"
+                            android:stateListAnimator="@null"
+                            app:autoSizeTextType="uniform"
+                            app:autoSizeStepGranularity="1sp"
+                            app:autoSizeMinTextSize="2sp"
+                            app:autoSizeMaxTextSize="10sp"
+                            android:text="@string/bt_abortcapture" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="0.6"/>
+                        <Button
+                            android:id="@+id/btSaveImage"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1.35"
+                            android:background="@drawable/buttonselector"
+                            android:stateListAnimator="@null"
+                            app:autoSizeTextType="uniform"
+                            app:autoSizeStepGranularity="1sp"
+                            app:autoSizeMinTextSize="2sp"
+                            app:autoSizeMaxTextSize="10sp"
+                            android:text="@string/bt_saveimage" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.1"/>
+            <!-- image info layout-->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="5.8"
+                android:weightSum="10"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5"
+                    android:text="@string/tv_fullcaptureimage"
+                    android:id="@+id/fullimagetext"
+                    app:autoSizeTextType="uniform"
+                    app:autoSizeStepGranularity="1sp"
+                    app:autoSizeMinTextSize="2sp"
+                    app:autoSizeMaxTextSize="10sp"
+                    android:gravity="center"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:id="@+id/captureInfo"
+                    android:orientation="horizontal"
+                    android:layout_weight="5.2"
+                    android:weightSum="10">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_weight="2.25"/>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_weight="5.5"
+                        android:background="@drawable/edit_round">
+
+                        <ImageView
+                            android:id="@+id/_ivCapture"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="6dp"
+                            android:layout_marginLeft="6dp"
+                            android:layout_marginRight="6dp"
+                            android:layout_marginBottom="6dp" />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_weight="2.25"/>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:id="@+id/segmenttext"
+                    android:layout_weight="0.5">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/textview_segment1"
+                        android:gravity="center"
+                        android:id="@+id/_tvSeg1"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeStepGranularity="1sp"
+                        app:autoSizeMinTextSize="2sp"
+                        app:autoSizeMaxTextSize="10sp"
+                        android:layout_weight="1"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/textview_segment2"
+                        android:gravity="center"
+                        android:id="@+id/_tvSeg2"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeStepGranularity="1sp"
+                        app:autoSizeMinTextSize="2sp"
+                        app:autoSizeMaxTextSize="10sp"
+                        android:layout_weight="1"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/textview_segment3"
+                        android:gravity="center"
+                        android:id="@+id/_tvSeg3"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeStepGranularity="1sp"
+                        app:autoSizeMinTextSize="2sp"
+                        app:autoSizeMaxTextSize="10sp"
+                        android:layout_weight="1"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/textview_segment4"
+                        android:gravity="center"
+                        android:id="@+id/_tvSeg4"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeStepGranularity="1sp"
+                        app:autoSizeMinTextSize="2sp"
+                        app:autoSizeMaxTextSize="10sp"
+                        android:layout_weight="1"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="3.3"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.5"/>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="9"
+                            android:background="@drawable/edit_round">
+                            <ImageView
+                                android:id="@+id/_ivSeg1"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="6dp"
+                                android:layout_marginLeft="6dp"
+                                android:layout_marginRight="6dp"
+                                android:layout_marginBottom="6dp"
+                                android:scaleType="fitCenter" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.5"/>
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.5"/>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="9"
+                            android:background="@drawable/edit_round">
+                            <ImageView
+                                android:id="@+id/_ivSeg2"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="6dp"
+                                android:layout_marginLeft="6dp"
+                                android:layout_marginRight="6dp"
+                                android:layout_marginBottom="6dp"
+                                android:scaleType="fitCenter" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.5"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.5"/>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="9"
+                            android:background="@drawable/edit_round">
+                            <ImageView
+                                android:id="@+id/_ivSeg3"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="6dp"
+                                android:layout_marginLeft="6dp"
+                                android:layout_marginRight="6dp"
+                                android:layout_marginBottom="6dp"
+                                android:scaleType="fitCenter" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.5"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.5"/>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="9"
+                            android:background="@drawable/edit_round">
+                            <ImageView
+                                android:id="@+id/_ivSeg4"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="6dp"
+                                android:layout_marginLeft="6dp"
+                                android:layout_marginRight="6dp"
+                                android:layout_marginBottom="6dp"
+                                android:scaleType="fitCenter" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.5"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:id="@+id/segmentInfoResult"
+                    android:layout_weight="0.4">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/textview_empty"
+                        android:gravity="center"
+                        android:id="@+id/_seg1_Info_result"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeStepGranularity="1sp"
+                        app:autoSizeMinTextSize="3sp"
+                        app:autoSizeMaxTextSize="11sp"
+                        android:layout_weight="1"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/textview_empty"
+                        android:gravity="center"
+                        android:id="@+id/_seg2_Info_result"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeStepGranularity="1sp"
+                        app:autoSizeMinTextSize="3sp"
+                        app:autoSizeMaxTextSize="11sp"
+                        android:layout_weight="1"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/textview_empty"
+                        android:gravity="center"
+                        android:id="@+id/_seg3_Info_result"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeStepGranularity="1sp"
+                        app:autoSizeMinTextSize="3sp"
+                        app:autoSizeMaxTextSize="11sp"
+                        android:layout_weight="1"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/textview_empty"
+                        android:gravity="center"
+                        android:id="@+id/_seg4_Info_result"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeStepGranularity="1sp"
+                        app:autoSizeMinTextSize="3sp"
+                        app:autoSizeMaxTextSize="11sp"
+                        android:layout_weight="1"/>
+
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.1"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</FrameLayout>

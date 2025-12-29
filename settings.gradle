@@ -1,0 +1,3 @@
+include ':libRealScan'
+include ':realscansample'
+rootProject.name = "realscan_android_customer_sample"

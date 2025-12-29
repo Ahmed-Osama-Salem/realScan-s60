@@ -1,0 +1,5 @@
+﻿.gradle
+libRealScan/build/
+.idea/
+.gradle/
+realscansample/build/

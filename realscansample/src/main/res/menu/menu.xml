@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/sdk_init"
+        android:icon="@drawable/sdk_init"
+        app:showAsAction="always"
+        />
+    <item
+        android:id="@+id/develop_menu"
+        android:title="Develop Menu"
+        android:visible="false"
+        />
+</menu>

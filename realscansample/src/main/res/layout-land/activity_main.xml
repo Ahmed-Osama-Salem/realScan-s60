@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:weightSum="10">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.7"/>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.6">
+
+        <com.google.android.material.tabs.TabItem
+            android:text="@string/tab_basicfunction"
+            app:autoSizeTextType="uniform"
+            app:autoSizeStepGranularity="1sp"
+            app:autoSizeMinTextSize="2sp"
+            app:autoSizeMaxTextSize="10sp"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent" />
+
+        <com.google.android.material.tabs.TabItem
+            android:text="@string/tab_enrollment"
+            app:autoSizeTextType="uniform"
+            app:autoSizeStepGranularity="1sp"
+            app:autoSizeMinTextSize="2sp"
+            app:autoSizeMaxTextSize="10sp"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent" />
+        <com.google.android.material.tabs.TabItem
+            android:text="@string/tab_setting"
+            app:autoSizeTextType="uniform"
+            app:autoSizeStepGranularity="1sp"
+            app:autoSizeMinTextSize="2sp"
+            app:autoSizeMaxTextSize="10sp"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent" />
+
+    </com.google.android.material.tabs.TabLayout>
+    <!--app:tabMode="scrollable"-->
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8.7"/>
+
+</LinearLayout>

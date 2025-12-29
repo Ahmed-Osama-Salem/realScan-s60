@@ -1,0 +1,187 @@
+<resources>
+    <string name="app_name">RealScan Sample</string>
+    <string name="tab_setting">Configuration</string>
+    <string name="tab_basicfunction">BASIC FUNCTION</string>
+    <string name="tab_enrollment">ENROLLMENT</string>
+    <string name="toast_viewpager_capturing">Capture is running.\nPlease do abort capture to change Menu.</string>
+
+    <!-- basic tab -->
+    <string name="tv_deviceinfo">DEVICE INFO</string>
+    <string name="tv_devicename">DEVICE NAME: </string>
+    <string name="tv_sdkinfo">SDK VERSION: </string>
+    <string name="tv_modename">MODE NAME: </string>
+    <string name="toast_selectmode">Capture Mode is not selected.\nPlease select capture mode to start capture function.</string>
+    <string name="bt_capturemode">SELECT CAPTURE MODE</string>
+    <string name="dialog_title_capturemod">Please select a capture mode.</string>
+    <string name="dialog_item_flat_one">One-Flat</string>
+    <string name="dialog_item_flat_two">Two-Flat</string>
+    <string name="dialog_item_flat_left_four">Four-Flat(Left)</string>
+    <string name="dialog_item_flat_right_four">Four-Flat(Right)</string>
+    <string name="dialog_item_roll_finger">Roll Finger</string>
+    <string name="toast_wanning_capturing">Capture Function is running.\nPlease close Capture Process first.</string>
+    <string name="toast_wanning_lfd_rollfinger">LFD mode is activated.\nRoll Finger Mode is not support LFD. \nThe LFD score will not be displayed.</string>
+    <string name="tv_capturefunction">CAPTURE FUNCTION</string>
+    <string name="bt_startcapture">PREVIEW CAPTURE</string>
+    <string name="bt_previewcapture">PREVIEW CAPTURE</string>
+    <string name="bt_manualcapture">MANUAL CAPTURE</string>
+    <string name="bt_autocapture">AUTO CAPTURE</string>
+    <string name="bt_abortcapture">ABORT CAPTURE</string>
+    <string name="bt_clearimage">CLEAR IMAGE</string>
+    <string name="bt_saveimage">SAVE IMAGE</string>
+    <string name="tv_fullcaptureimage">FULL</string>
+    <string name="tv_segment1">INDEX</string>
+    <string name="tv_segment2">MIDDLE</string>
+    <string name="tv_segment3">RINGER</string>
+    <string name="tv_segment4">PINKY</string>
+    <string name="err_fewerfinger">Capture is stopped due to lack of fingers.\nPlease count the number of fingers. </string>
+    <string name="err_wronghand">Capture is stopped due to a wrong hand.\nPlease try again with the correct hand.</string>
+    <string name="err_fingercount_not_matched">Capture is stopped due to a wrong capture mode.\nPlease choose the proper capture mode that match finger-counting menu.</string>
+    <string name="err_can_not_segment">Segmentation is failed. Please try again.</string>
+    <string name="err_wrong_fingercount">Finger Count is not matched to current capture mode. </string>
+    <string name="err_missing_finger_not_support_rs_d_enrollment">RealScan D is not support Missing-Finger feature.\nPlease disable Missing-Finger Feature in setting menu. </string>
+
+    <!-- enrollment tab -->
+    <string name="bt_startenrollment">START 4-4-2 ENROLLMENT</string>
+    <string name="bt_startenrollment_D">START 2-2-2-2-2 ENROLLMENT</string>
+    <string name="tv_leftpinky">LEFT LITTLE</string>
+    <string name="tv_leftringer">LEFT RINGER</string>
+    <string name="tv_leftmiddle">LEFT MIDDLE</string>
+    <string name="tv_leftindex">LEFT INDEX</string>
+    <string name="tv_leftthumb">LEFT THUMB</string>
+    <string name="tv_rightindex">RIGHT INDEX</string>
+    <string name="tv_rightmiddle">RIGHT MIDDLE</string>
+    <string name="tv_rightringer">RIGHT RINGER</string>
+    <string name="tv_rightpinky">RIGHT LITTLE</string>
+    <string name="tv_rightthumb">RIGHT THUMB</string>
+    <string name="tv_leftfour">LEFT FOUR</string>
+    <string name="tv_rightfour">RIGHT FOUR</string>
+
+    <!-- setting tab -->
+    <string name="prefcategory_capturesetting">CAPTURE SETTING</string>
+    <string name="pref_segmentation">Segmentation</string>
+    <string name="pref_rolldiection">Roll Capture Direction</string>
+    <string name="pref_seqcheckcapturemode">Sequence Check Capture Mode</string>
+    <string name="pref_Capture_Timeout">Capture Timeout</string>
+    <string name="pref_summery_segmentation">Enable/Disable check segmentation function.</string>
+    <string name="prefcategory_imagesetting">IMAGE SETTING</string>
+    <string name="prefcategory_generalsetting">GENERAL SETTING</string>
+    <string name="pref_imageformat">Image Format</string>
+    <string name="pref_imageformat_jpeg">JPEG</string>
+    <string name="pref_imageformat_bmp">BMP</string>
+    <string name="pref_summery_imageformat">The captured image will be saved in the sdcard/picture folder with selected format.</string>
+    <string name="dpi_list">dpi list</string>
+    <string name="dpi_list_summery">custom dpi setting</string>
+    <string name="file_format_alert">You have to set the file format in Setting Menu.</string>
+    <string name="dpi_alert">You have to set the file dpi in Setting Menu.</string>
+    <string name="Theme_list">Theme Setting</string>
+    <string name="Theme_dark">Dark</string>
+    <string name="Theme_light">Light</string>
+    <string name="Theme_dark_summery">Light/Dark Mode Select Menu. UI will be restarted.</string>
+    <string name="pref_checkCustomerId">Check Customer ID</string>
+    <string name="prefcategory_checkcustomerid">CUSTOMER ID SECURITY</string>
+    <string name="prefcategory_dirtycheck">DIRTY CHECK</string>
+    <string name="pref_check_customer_id">CHECK CUSTOMER ID</string>
+    <string name="checkCustomerId_function_summery">Enable/Disable check Customer Id function.</string>
+    <string name="checkCustomerId_title">Customer ID</string>
+    <string name="pref_checkCustomerId_value_summery">Edit customer id value.</string>
+    <string name="prefcategory_nfiq">NFIQ</string>
+    <string name="pref_nfiqmode">NFIQ MODE</string>
+    <string name="pref_nfiq_score">NFIQ SCORE</string>
+    <string name="pref_summery_nfiqmode">Select enable/disable NFIQ mode.</string>
+    <string name="pref_summery_nfiq_score">Score Range is 1~5 with 1 step.</string>
+    <string name="prefcategory_lfd">Live Finger Detection</string>
+    <string name="pref_lfdmode">LFD MODE</string>
+    <string name="pref_lfd_score">LFD SCORE</string>
+    <string name="pref_summery_lfdmode">LFD 1~5 range value.</string>
+    <string name="pref_summery_realscand_lfdmode">LFD 0(Diable) or 1(Enable) value.</string>
+    <string name="pref_summery_lfd_score">Score Range is 0~1000.</string>
+    <string name="pref_lfdfromimagefile">Live Finger Detection From Image File</string>
+    <string name="pref_lfdfromfolder">Live Finger Detection From folder</string>
+    <string name="pref_summery_lfdfromimagefile">Select Image File with File browser. Currently, this function is support Raw image file, only. </string>
+    <string name="pref_summery_lfdfromfolder">Create BioMini_LFD Folder and Copy the file to the folder.</string>
+    <string name="pref_license">License</string>
+
+    <string name="prefcategory_missingfinger">Missing Finger</string>
+    <string name="pref_missingfingerfunction">Activate Function</string>
+    <string name="pref_minimumfinger">Number of fingers to capture</string>
+    <string name="pref_minimumfinger_summery">Select finger number for capture to work.</string>
+    <string name="pref_hand_select">Select Hand</string>
+    <string name="list_left_hand">Left Hand</string>
+    <string name="list_right_hand">Right Hand</string>
+    <string name="pref_hand_select_summery">Select the Hand to Capture.</string>
+    <string name="pref_fingerselect"> Select Missing Finger </string>
+    <string name="pref_fingerselect_summery"> Select finger to skip when capturing </string>
+    <string name="pref_fingerselect_error"> Please select finger to match the capture mode.</string>
+    <string name="finger_thumb">THUMB</string>
+    <string name="finger_index">INDEX</string>
+    <string name="finger_middle">MIDDLE</string>
+    <string name="finger_ringer">RINGER</string>
+    <string name="finger_little">LITTLE</string>
+    <string name="finger_left_thumb">LEFT THUMB</string>
+    <string name="finger_right_thumb">RIGHT THUMB</string>
+    <string name="right_finger_thumb">RIGHT_THUMB</string>
+    <string name="right_finger_index">RIGHT_INDEX</string>
+    <string name="right_finger_middle">RIGHT_MIDDLE</string>
+    <string name="right_finger_ringer">RIGHT_RINGER</string>
+    <string name="right_finger_little">RIGHT_LITTLE</string>
+    <string name="left_finger_thumb">LEFT_THUMB</string>
+    <string name="left_finger_index">LEFT_INDEX</string>
+    <string name="left_finger_middle">LEFT_MIDDLE</string>
+    <string name="left_finger_ringer">LEFT_RINGER</string>
+    <string name="left_finger_little">LEFT_LITTLE</string>
+
+    <string name="textview_segment1">segment #1</string>
+    <string name="textview_segment2">segment #2</string>
+    <string name="textview_segment3">segment #3</string>
+    <string name="textview_segment4">segment #4</string>
+
+    <string name="textview_empty">\u0020</string>
+
+    <string name="prefcategory_custom_segmentsize">Custom Segment Size</string>
+    <string name="pref_custom_segmentsize_function">Activate Function</string>
+    <string name="pref_custom_segmentsize_width">Width</string>
+    <string name="pref_custom_segmentsize_width_summery">Set Width</string>
+    <string name="pref_custom_segmentsize_height">Height</string>
+    <string name="pref_custom_segmentsize_height_summery">Set Height</string>
+    <string name="pref_error_size_value_range_width">Please enter the correct value.</string>
+    <string name="pref_error_size_value_range_height">Please enter the correct value.</string>
+
+    <string name="pref_preview_quality">Preview Quality</string>
+
+    <string name="pref_useNativeUsbMode">Use Native USB Mode</string>
+    <string name="pref_summery_useNativeUsbMode">Set USB mode to Native USB Mode. Default Mode is android USB Mode.</string>
+    <string name="pref_enhancedpreviewmode">Enhanced Preview Mode</string>
+    <string name="pref_dirtycheck">Dirty Check</string>
+    <string name="pref_dirtycheck_level">Dirty Check Level</string>
+    <string name="pref_captureareaexpandmode">Capture Area Expand Mode(Only Enrollment)</string>
+    <string name="pref_haloreductionenhanced">Enhanced Halo Reduction</string>
+
+    <string name="pref_summery_useLibUsbMode">Set USB mode to Lib USB Mode. Default Mode is android USB Mode.</string>
+    <string name="pref_summery_enhancedpreviewmode">Preview images are displayed larger in independent dialogs.</string>
+    <string name="pref_summery_dirtycheck">Activates the function to check the dirt on the sensor surface.</string>
+    <string name="pref_summery_dirtycheck_level">Set dirty check level.</string>
+    <string name="pref_dirtycheck_level_wrong_value">Plesae enter the correct value.(1~5)</string>
+    <string name="pref_summery_captureareaexpandmode">Expand the capture area to the maximum.</string>
+    <string name="pref_summury_haloreductionenhanced">Set Halo Reduction Enhanced</string>
+
+    <string name="prefcategory_s60setting">RealScan S60 SETTING</string>
+    <string name="pref_s60Capture_measurement_enable_mode">External Bright measurement</string>
+    <string name="pref_summary_s60Capture_measurement_enable_mode">Set External Bright measurement (default is Enable)</string>
+    <string name="pref_s60Capture_measurement_mode">External Bright Area</string>
+    <string name="pref_summary_s60Capture_measurement_mode">Set External Bright Area (default is Full)</string>
+    <string name="pref_supportLowCpuDevice">support Low Cpu Device</string>
+    <string name="pref_summery_supportLowCpuDevice">Set mode to support low cpu device.</string>
+    <string name="pref_sensitive_mode">Sensitive Mode</string>
+    <string name="pref_summery_sensitivemode">Improved Sensitive(default is Normal)</string>
+    <string name="toast_wanning_custom_segment">An error occurred in Custom Segment Size settings. Please check again.</string>
+
+    <string name="prefcategory_LEDsetting">LED SETTING</string>
+    <string name="pref_ledSetting">Led Set Default</string>
+    <string name="pref_customLedMode">Custom Led Mode</string>
+    <string name="pref_summery_customLedMode">Enable/Disable check Custome Led Mode</string>
+    <string name="pref_summary_mode_led_preference_mode">Set Mode LED</string>
+    <string name="pref_mode_led_preference_mode">Choose a Mode LED</string>
+    <string name="pref_summary_status_led_preference_mode">Set Status LED</string>
+    <string name="pref_status_led_preference_mode">Choose a Status LED</string>
+
+</resources>
