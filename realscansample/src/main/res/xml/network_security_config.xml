@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Development configuration - WARNING: This is insecure! -->
+    <!-- For production, use proper certificates from trusted CAs -->
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <!-- Trust system certificates -->
+            <certificates src="system" />
+            <!-- Trust user added certificates -->
+            <certificates src="user" />
+            <!-- WARNING: Trust all certificates for development only -->
+            <!-- This bypasses SSL certificate validation -->
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+    
+    <!-- Specific configuration for development server -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">dev-operatorportal-notificationhubservice.cme.com</domain>
+        <domain includeSubdomains="true">cme.com</domain>
+        <domain includeSubdomains="true">notificationhubservice.cme.com</domain>
+        <trust-anchors>
+            <!-- Trust system certificates -->
+            <certificates src="system" />
+            <!-- Trust user added certificates -->
+            <certificates src="user" />
+        </trust-anchors>
+    </domain-config>
+    
+    <!-- Debug-only configuration: Trust all certificates -->
+    <!-- This is only used if the app is debuggable -->
+    <debug-overrides>
+        <trust-anchors>
+            <!-- Trust all certificates in debug mode -->
+            <certificates src="system" />
+            <certificates src="user" />
+        </trust-anchors>
+    </debug-overrides>
+</network-security-config>
+

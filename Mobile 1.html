@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Mobile Simulator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.7/signalr.min.js"></script>
+  </head>
+  <body>
+    <h2>Mobile Simulator</h2>
+    <div>Status: <span id="status">Disconnected</span></div>
+
+    <script>
+      const deviceId = "2"; // same device group as viewer
+      const hub = new signalR.HubConnectionBuilder()
+        .withUrl(
+          `https://dev-operatorportal-notificationhubservice.cme.com/hubs/integration?deviceId=${encodeURIComponent(
+            deviceId
+          )}`
+        )
+        .build();
+
+      const HubEvents = {
+        ServerToClient: {
+          Info: "Server_Info",
+          RequestAction: "Server_RequestAction",
+          DataReceived: "Server_DataReceived",
+          Ack: "Server_Ack",
+          Error: "Server_Error",
+        },
+        ClientToServer: {
+          Ping: "Client_Ping",
+          SendData: "Client_SendData",
+        },
+      };
+
+      hub.on(HubEvents.ServerToClient.Info, (msg) => {
+        console.log("SystemMessage:", msg);
+      });
+
+      hub.on(
+        HubEvents.ServerToClient.RequestAction,
+        async (requestId, fingerNumber) => {
+          console.log("Scan request received:", requestId, fingerNumber);
+          document.getElementById(
+            "status"
+          ).innerText = `Scanning finger ${fingerNumber}...`;
+
+          // Simulate scanning delay
+          await new Promise((r) => setTimeout(r, 2000));
+
+          // Generate fake Base64 (small dummy image)
+          const fakeBase64 =
+            "iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAIAAADTED8xAAADMElEQVR4nOzVwQnAIBQFQYXff81RUkQCOyDj1YOPnbXWPmeTRef+/3O/OyBjzh3CD95BfqICMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMO0TAAD//2Anhf4QtqobAAAAAElFTkSuQmCC";
+
+          // Upload via hub
+          await hub.invoke(
+            "UploadFingerprint",
+            requestId,
+            deviceId,
+            fakeBase64
+          );
+          console.log("Uploaded scanned fingerprint for request:", requestId);
+
+          document.getElementById(
+            "status"
+          ).innerText = `Scanned finger ${fingerNumber} and uploaded`;
+        }
+      );
+
+      hub.on(HubEvents.ServerToClient.Ack, (requestId) => {
+        console.log("Server acknowledged upload:", requestId);
+      });
+
+      hub
+        .start()
+        .then(() => {
+          document.getElementById("status").innerText = "Connected";
+        })
+        .catch((err) => {
+          console.error(err);
+          document.getElementById("status").innerText = "Disconnected";
+        });
+
+      hub.onclose(() => {
+        document.getElementById("status").innerText = "Disconnected";
+      });
+    </script>
+  </body>
+</html>

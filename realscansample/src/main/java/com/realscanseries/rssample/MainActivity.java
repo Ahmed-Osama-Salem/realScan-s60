@@ -131,6 +131,16 @@ public class MainActivity extends AppCompatActivity implements BasicFuncFragment
 
     private Bitmap fullBitmapData;
 
+    // SignalR Integration
+    private SignalRManager signalRManager;
+    private boolean isSignalREnrollmentMode = false;
+    private int signalREnrollmentStep = 0; // 0=left4, 1=right4, 2=thumbs
+    private Map<Integer, Boolean> signalRCapturedFingers = new HashMap<>();
+    private int currentRequestedFingerIndex = -1;
+    private boolean isSignalRSingleFingerMode = false;
+    private String currentSignalRRequestId = null;  // Store current request ID for upload
+    private static final String SIGNALR_HUB_URL = "https://dev-operatorportal-notificationhubservice.cme.com/hubs/integration?deviceId=2";
+
     private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
 
     private static final int PERMISSION_ALL = 786;
@@ -301,6 +311,63 @@ public class MainActivity extends AppCompatActivity implements BasicFuncFragment
             mStartTime = SystemClock.currentThreadTimeMillis();
             if(mPreviewDialog != null)
                 mPreviewDialog.dismiss();
+            
+            // ═══════════════════════════════════════════════════════════════════
+            // SignalR Integration - Upload fingerprint when capture is complete
+            // ═══════════════════════════════════════════════════════════════════
+            android.util.Log.e("MainActivity", "════════════════════════════════════════════════════════");
+            android.util.Log.e("MainActivity", "=== onCaptureDataReceived ===");
+            android.util.Log.e("MainActivity", "errorCode: " + errorCode);
+            android.util.Log.e("MainActivity", "isSignalRSingleFingerMode: " + isSignalRSingleFingerMode);
+            android.util.Log.e("MainActivity", "currentSignalRRequestId: " + currentSignalRRequestId);
+            android.util.Log.e("MainActivity", "captureImage size: " + (captureImage != null ? captureImage.length : "null") + " bytes");
+            android.util.Log.e("MainActivity", "dimensions: " + imgWidth + "x" + imgHeight);
+            
+            if (isSignalRSingleFingerMode && errorCode == ErrorCode.OK.getErrorCode()) {
+                android.util.Log.e("MainActivity", "✅ SignalR single finger mode - uploading fingerprint");
+                android.util.Log.e("MainActivity", "Raw image size: " + (captureImage != null ? captureImage.length : 0) + " bytes");
+                android.util.Log.e("MainActivity", "Image dimensions: " + imgWidth + "x" + imgHeight);
+                
+                if (captureImage != null && signalRManager != null && currentSignalRRequestId != null) {
+                    // Convert raw pixel data to PNG image, then to base64
+                    // This is needed because captureImage is raw grayscale data, not a standard image format
+                    byte[] pngBytes = convertToPngBytes(captureImage, imgWidth, imgHeight);
+                    
+                    if (pngBytes != null) {
+                        android.util.Log.e("MainActivity", "PNG bytes size: " + pngBytes.length + " bytes");
+                        
+                        // Encode to base64 exactly like the working SDK
+                        String base64Image = android.util.Base64.encodeToString(pngBytes, android.util.Base64.NO_WRAP);
+                        android.util.Log.e("MainActivity", "Base64 image size: " + base64Image.length() + " characters");
+                        
+                        // Log first 100 characters to verify format
+                        String preview = base64Image.length() > 100 ? base64Image.substring(0, 100) + "..." : base64Image;
+                        android.util.Log.e("MainActivity", "Base64 preview: " + preview);
+                        
+                        android.util.Log.e("MainActivity", "📤 Uploading fingerprint - requestId: " + currentSignalRRequestId);
+                        signalRManager.uploadFingerprint(currentSignalRRequestId, base64Image);
+                        Toast.makeText(MainActivity.this, "Fingerprint sent to frontend!", Toast.LENGTH_SHORT).show();
+                        
+                        // Reset single finger mode
+                        isSignalRSingleFingerMode = false;
+                        currentRequestedFingerIndex = -1;
+                        currentSignalRRequestId = null;
+                        
+                        // Stop the capture process
+                        android.util.Log.e("MainActivity", "✅ Capture complete - stopping capture process");
+                        runOnUiThread(() -> {
+                            abortCapture();
+                        });
+                    } else {
+                        android.util.Log.e("MainActivity", "❌ Failed to convert image to PNG bytes");
+                    }
+                } else {
+                    android.util.Log.e("MainActivity", "❌ Cannot upload: captureImage=" + (captureImage != null) + 
+                        ", signalRManager=" + (signalRManager != null) + ", requestId=" + currentSignalRRequestId);
+                }
+            }
+            // ═══════════════════════════════════════════════════════════════════
+            
             if (_rsApi != null) {
                 Logger.i();
                 Logger.d("onCaptureDataReceived! : " + errorCode);
@@ -976,6 +1043,73 @@ public class MainActivity extends AppCompatActivity implements BasicFuncFragment
                 mSettingFragment.updateLfdScore(nFingerCnt, errorCode);
                 updateBasicLfdScore(nFingerCnt, nFingerIndex, errorCode);
             }
+            
+            // SignalR Integration - Send fingerprints to frontend
+            android.util.Log.e("MainActivity", "════════════════════════════════════════════════════════");
+            android.util.Log.e("MainActivity", "=== onSegmentDataReceived - SignalR Check ===");
+            android.util.Log.e("MainActivity", "errorCode: " + errorCode + " (OK=" + ErrorCode.OK.getErrorCode() + ")");
+            android.util.Log.e("MainActivity", "isSignalRSingleFingerMode: " + isSignalRSingleFingerMode);
+            android.util.Log.e("MainActivity", "currentRequestedFingerIndex: " + currentRequestedFingerIndex);
+            android.util.Log.e("MainActivity", "currentSignalRRequestId: " + currentSignalRRequestId);
+            android.util.Log.e("MainActivity", "nFingerType: " + nFingerType);
+            
+            if (errorCode == ErrorCode.OK.getErrorCode()) {
+                int fingerIndex = getFingerIndexFromType(nFingerType);
+                android.util.Log.e("MainActivity", "Calculated fingerIndex from type: " + fingerIndex);
+                android.util.Log.e("MainActivity", "fingerIndex matches requested? " + (fingerIndex == currentRequestedFingerIndex));
+                
+                // Single finger mode
+                if (isSignalRSingleFingerMode) {
+                    android.util.Log.e("MainActivity", "✅ In SignalR single finger mode");
+                    
+                    if (fingerIndex >= 0) {
+                        android.util.Log.e("MainActivity", "✅ fingerIndex is valid: " + fingerIndex);
+                        
+                        // Accept any finger in single finger mode (don't check exact match)
+                        String base64Image = convertToBase64(segmentImage, imgWidth, imgHeight);
+                        android.util.Log.e("MainActivity", "base64Image length: " + (base64Image != null ? base64Image.length() : "null"));
+                        
+                        if (base64Image != null && signalRManager != null && currentSignalRRequestId != null) {
+                            android.util.Log.e("MainActivity", "📤 Uploading fingerprint - requestId: " + currentSignalRRequestId);
+                            signalRManager.uploadFingerprint(currentSignalRRequestId, base64Image);
+                            Toast.makeText(MainActivity.this, "Fingerprint sent to frontend", Toast.LENGTH_SHORT).show();
+                            
+                            // Reset single finger mode
+                            isSignalRSingleFingerMode = false;
+                            currentRequestedFingerIndex = -1;
+                            currentSignalRRequestId = null;
+                            
+                            // Stop the capture process after uploading
+                            android.util.Log.e("MainActivity", "✅ Stopping capture process after upload");
+                            runOnUiThread(() -> {
+                                abortCapture();
+                            });
+                        } else {
+                            android.util.Log.e("MainActivity", "❌ Cannot upload: base64=" + (base64Image != null) + 
+                                ", signalRManager=" + (signalRManager != null) + ", requestId=" + currentSignalRRequestId);
+                        }
+                    } else {
+                        android.util.Log.e("MainActivity", "❌ fingerIndex is invalid: " + fingerIndex);
+                    }
+                } else {
+                    android.util.Log.e("MainActivity", "❌ NOT in SignalR single finger mode");
+                }
+                
+                // Enrollment mode
+                if (isSignalREnrollmentMode && fingerIndex >= 0 && !signalRCapturedFingers.containsKey(fingerIndex)) {
+                    String base64Image = convertToBase64(segmentImage, imgWidth, imgHeight);
+                    if (base64Image != null && signalRManager != null && currentSignalRRequestId != null) {
+                        android.util.Log.e("MainActivity", "📤 Uploading enrollment fingerprint - requestId: " + currentSignalRRequestId);
+                        signalRManager.uploadFingerprint(currentSignalRRequestId, base64Image);
+                        signalRCapturedFingers.put(fingerIndex, true);
+                        
+                        Logger.d("Sent fingerprint index " + fingerIndex + " via SignalR");
+                        
+                        // Check if we need to proceed to next step
+                        checkAndProceedEnrollmentStep();
+                    }
+                }
+            }
         }
 
         @Override
@@ -1195,6 +1329,11 @@ public class MainActivity extends AppCompatActivity implements BasicFuncFragment
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        android.util.Log.d("MainActivity", "=== onCreate STARTED ===");
+        
+        // Configure SSL to trust all certificates (for development)
+        SSLHelper.trustAllCertificates();
+        
         setContentView(R.layout.activity_main);
         new Logger();
         Logger.d("START! : " + this);
@@ -1217,6 +1356,11 @@ public class MainActivity extends AppCompatActivity implements BasicFuncFragment
             setupViewPager(viewPager);
         }
         initUsbListener();
+        
+        // Initialize SignalR
+        android.util.Log.d("MainActivity", "About to initialize SignalR with URL: " + SIGNALR_HUB_URL);
+        initializeSignalR(SIGNALR_HUB_URL);
+        android.util.Log.d("MainActivity", "SignalR initialization call completed");
     }
 
     private boolean initParamToSdk() {
@@ -2078,6 +2222,14 @@ public class MainActivity extends AppCompatActivity implements BasicFuncFragment
         } catch (IllegalArgumentException e) {
             mUsbReceiver = null;
         }
+        
+        // Disconnect SignalR
+        if (signalRManager != null) {
+            Logger.d("Disconnecting SignalR in onDestroy...");
+            signalRManager.logConnectionStatus();
+            signalRManager.disconnect();
+        }
+        
         _rsApi = null;
         mDeviceDataHandler = null;
         mContext = null;
@@ -3579,6 +3731,464 @@ public class MainActivity extends AppCompatActivity implements BasicFuncFragment
         return result;
     }
 
+    /**
+     * Convert raw grayscale pixel data to PNG byte array
+     * Creates 8-bit grayscale PNG with 500 DPI resolution
+     */
+    private byte[] convertToPngBytes(byte[] imageData, int width, int height) {
+        try {
+            android.util.Log.e("MainActivity", "=== Converting to PNG bytes (500 DPI, 8-bit grayscale) ===");
+            android.util.Log.e("MainActivity", "Input: " + imageData.length + " bytes, " + width + "x" + height);
+            
+            // Create 8-bit grayscale PNG directly from raw data
+            byte[] pngBytes = createGrayscalePng(imageData, width, height, 500);
+            
+            if (pngBytes == null) {
+                android.util.Log.e("MainActivity", "Failed to create grayscale PNG");
+                return null;
+            }
+            
+            android.util.Log.e("MainActivity", "PNG output: " + pngBytes.length + " bytes");
+            
+            // Verify PNG header (should start with 0x89 0x50 0x4E 0x47 = PNG signature)
+            if (pngBytes.length > 4) {
+                android.util.Log.e("MainActivity", "PNG header: " + 
+                    String.format("%02X %02X %02X %02X", 
+                        pngBytes[0] & 0xFF, pngBytes[1] & 0xFF, 
+                        pngBytes[2] & 0xFF, pngBytes[3] & 0xFF));
+            }
+            
+            android.util.Log.e("MainActivity", "✅ PNG created with 500 DPI, 8-bit grayscale");
+            return pngBytes;
+        } catch (Exception e) {
+            android.util.Log.e("MainActivity", "Error converting to PNG: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    /**
+     * Create an 8-bit grayscale PNG with specified DPI
+     * @param grayscaleData Raw 8-bit grayscale pixel data
+     * @param width Image width
+     * @param height Image height
+     * @param dpi Resolution in dots per inch (500 for fingerprint)
+     */
+    private byte[] createGrayscalePng(byte[] grayscaleData, int width, int height, int dpi) {
+        try {
+            java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
+            
+            // PNG Signature (8 bytes)
+            byte[] signature = {(byte)0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A};
+            baos.write(signature);
+            
+            // IHDR chunk (Image Header)
+            // Width: 4 bytes, Height: 4 bytes, Bit depth: 1 byte (8), 
+            // Color type: 1 byte (0 = grayscale), Compression: 1 byte (0),
+            // Filter: 1 byte (0), Interlace: 1 byte (0)
+            byte[] ihdrData = new byte[13];
+            // Width (big-endian)
+            ihdrData[0] = (byte)((width >> 24) & 0xFF);
+            ihdrData[1] = (byte)((width >> 16) & 0xFF);
+            ihdrData[2] = (byte)((width >> 8) & 0xFF);
+            ihdrData[3] = (byte)(width & 0xFF);
+            // Height (big-endian)
+            ihdrData[4] = (byte)((height >> 24) & 0xFF);
+            ihdrData[5] = (byte)((height >> 16) & 0xFF);
+            ihdrData[6] = (byte)((height >> 8) & 0xFF);
+            ihdrData[7] = (byte)(height & 0xFF);
+            // Bit depth: 8
+            ihdrData[8] = 8;
+            // Color type: 0 (grayscale)
+            ihdrData[9] = 0;
+            // Compression method: 0 (deflate)
+            ihdrData[10] = 0;
+            // Filter method: 0
+            ihdrData[11] = 0;
+            // Interlace method: 0 (no interlace)
+            ihdrData[12] = 0;
+            
+            writeChunk(baos, "IHDR", ihdrData);
+            
+            // pHYs chunk (Physical pixel dimensions) - 500 DPI
+            // 500 DPI = 500 pixels/inch * 39.3701 inches/meter = 19685 pixels/meter
+            int ppm = (int)(dpi * 39.3701);
+            byte[] physData = new byte[9];
+            // X pixels per meter (big-endian)
+            physData[0] = (byte)((ppm >> 24) & 0xFF);
+            physData[1] = (byte)((ppm >> 16) & 0xFF);
+            physData[2] = (byte)((ppm >> 8) & 0xFF);
+            physData[3] = (byte)(ppm & 0xFF);
+            // Y pixels per meter (big-endian)
+            physData[4] = (byte)((ppm >> 24) & 0xFF);
+            physData[5] = (byte)((ppm >> 16) & 0xFF);
+            physData[6] = (byte)((ppm >> 8) & 0xFF);
+            physData[7] = (byte)(ppm & 0xFF);
+            // Unit: 1 (meter)
+            physData[8] = 1;
+            
+            writeChunk(baos, "pHYs", physData);
+            
+            // IDAT chunk (Image Data)
+            // PNG requires a filter byte at the start of each row
+            // Filter type 0 = None (no filtering)
+            byte[] rawImageData = new byte[height * (1 + width)]; // 1 filter byte per row + pixel data
+            int srcPos = 0;
+            int dstPos = 0;
+            for (int y = 0; y < height; y++) {
+                rawImageData[dstPos++] = 0; // Filter type: None
+                System.arraycopy(grayscaleData, srcPos, rawImageData, dstPos, width);
+                srcPos += width;
+                dstPos += width;
+            }
+            
+            // Compress with zlib/deflate
+            java.io.ByteArrayOutputStream compressedStream = new java.io.ByteArrayOutputStream();
+            java.util.zip.DeflaterOutputStream deflater = new java.util.zip.DeflaterOutputStream(
+                compressedStream, new java.util.zip.Deflater(java.util.zip.Deflater.BEST_COMPRESSION));
+            deflater.write(rawImageData);
+            deflater.finish();
+            deflater.close();
+            byte[] compressedData = compressedStream.toByteArray();
+            
+            writeChunk(baos, "IDAT", compressedData);
+            
+            // IEND chunk (Image End)
+            writeChunk(baos, "IEND", new byte[0]);
+            
+            return baos.toByteArray();
+        } catch (Exception e) {
+            android.util.Log.e("MainActivity", "Error creating grayscale PNG: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    /**
+     * Write a PNG chunk to the output stream
+     */
+    private void writeChunk(java.io.ByteArrayOutputStream baos, String type, byte[] data) throws java.io.IOException {
+        // Length (4 bytes, big-endian)
+        int length = data.length;
+        baos.write((length >> 24) & 0xFF);
+        baos.write((length >> 16) & 0xFF);
+        baos.write((length >> 8) & 0xFF);
+        baos.write(length & 0xFF);
+        
+        // Type (4 bytes)
+        byte[] typeBytes = type.getBytes("US-ASCII");
+        baos.write(typeBytes);
+        
+        // Data
+        baos.write(data);
+        
+        // CRC (4 bytes) - calculated over type + data
+        java.util.zip.CRC32 crc32 = new java.util.zip.CRC32();
+        crc32.update(typeBytes);
+        crc32.update(data);
+        long crc = crc32.getValue();
+        baos.write((int)((crc >> 24) & 0xFF));
+        baos.write((int)((crc >> 16) & 0xFF));
+        baos.write((int)((crc >> 8) & 0xFF));
+        baos.write((int)(crc & 0xFF));
+    }
+    
+    /**
+     * Convert raw grayscale pixel data to JPEG byte array
+     */
+    private byte[] convertToJpegBytes(byte[] imageData, int width, int height) {
+        try {
+            Bitmap bitmap = getBitmapFromByte(imageData, width, height);
+            if (bitmap == null) return null;
+            
+            java.io.ByteArrayOutputStream outputStream = new java.io.ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream);
+            return outputStream.toByteArray();
+        } catch (Exception e) {
+            android.util.Log.e("MainActivity", "Error converting to JPEG: " + e.getMessage());
+            return null;
+        }
+    }
+    
+    // Legacy method for compatibility
+    private String convertToBase64(byte[] imageData, int width, int height) {
+        byte[] pngBytes = convertToPngBytes(imageData, width, height);
+        if (pngBytes == null) return null;
+        return android.util.Base64.encodeToString(pngBytes, android.util.Base64.NO_WRAP);
+    }
+
+    // Get finger index from SDK finger type
+    // New mapping: RightThumb=0, RightIndex=1, RightMiddle=2, RightRing=3, RightLittle=4,
+    //              LeftThumb=5, LeftIndex=6, LeftMiddle=7, LeftRing=8, LeftLittle=9
+    private int getFingerIndexFromType(int fingerType) {
+        // Right hand
+        if (fingerType == DeviceDataHandler.FingerType.RS_FGP_RIGHT_THUMB.value()) return 0;      // RightThumb
+        if (fingerType == DeviceDataHandler.FingerType.RS_FGP_RIGHT_INDEX.value()) return 1;      // RightIndex
+        if (fingerType == DeviceDataHandler.FingerType.RS_FGP_RIGHT_MIDDLE.value()) return 2;     // RightMiddle
+        if (fingerType == DeviceDataHandler.FingerType.RS_FGP_RIGHT_RING.value()) return 3;        // RightRing
+        if (fingerType == DeviceDataHandler.FingerType.RS_FGP_RIGHT_LITTLE.value()) return 4;     // RightLittle
+        // Left hand
+        if (fingerType == DeviceDataHandler.FingerType.RS_FGP_LEFT_THUMB.value()) return 5;       // LeftThumb
+        if (fingerType == DeviceDataHandler.FingerType.RS_FGP_LEFT_INDEX.value()) return 6;       // LeftIndex
+        if (fingerType == DeviceDataHandler.FingerType.RS_FGP_LEFT_MIDDLE.value()) return 7;       // LeftMiddle
+        if (fingerType == DeviceDataHandler.FingerType.RS_FGP_LEFT_RING.value()) return 8;         // LeftRing
+        if (fingerType == DeviceDataHandler.FingerType.RS_FGP_LEFT_LITTLE.value()) return 9;       // LeftLittle
+        return -1;
+    }
+
+    // Get finger type from index
+    // New mapping: RightThumb=0, RightIndex=1, RightMiddle=2, RightRing=3, RightLittle=4,
+    //              LeftThumb=5, LeftIndex=6, LeftMiddle=7, LeftRing=8, LeftLittle=9
+    private int getFingerTypeFromIndex(int fingerIndex) {
+        switch (fingerIndex) {
+            case 0: return DeviceDataHandler.FingerType.RS_FGP_RIGHT_THUMB.value();      // RightThumb
+            case 1: return DeviceDataHandler.FingerType.RS_FGP_RIGHT_INDEX.value();      // RightIndex
+            case 2: return DeviceDataHandler.FingerType.RS_FGP_RIGHT_MIDDLE.value();    // RightMiddle
+            case 3: return DeviceDataHandler.FingerType.RS_FGP_RIGHT_RING.value();        // RightRing
+            case 4: return DeviceDataHandler.FingerType.RS_FGP_RIGHT_LITTLE.value();     // RightLittle
+            case 5: return DeviceDataHandler.FingerType.RS_FGP_LEFT_THUMB.value();       // LeftThumb
+            case 6: return DeviceDataHandler.FingerType.RS_FGP_LEFT_INDEX.value();       // LeftIndex
+            case 7: return DeviceDataHandler.FingerType.RS_FGP_LEFT_MIDDLE.value();      // LeftMiddle
+            case 8: return DeviceDataHandler.FingerType.RS_FGP_LEFT_RING.value();        // LeftRing
+            case 9: return DeviceDataHandler.FingerType.RS_FGP_LEFT_LITTLE.value();      // LeftLittle
+            default: return -1;
+        }
+    }
+
+    // Get finger name for display
+    // 0-9 = individual fingers, 10-12 = group captures
+    private String getFingerName(int fingerIndex) {
+        String[] fingerNames = {
+            "Right Thumb", "Right Index Finger", "Right Middle Finger",
+            "Right Ring Finger", "Right Little Finger",
+            "Left Thumb", "Left Index Finger", "Left Middle Finger",
+            "Left Ring Finger", "Left Little Finger",
+            "Left Four Fingers", "Right Four Fingers", "Both Thumbs"
+        };
+        return fingerIndex >= 0 && fingerIndex < fingerNames.length ? fingerNames[fingerIndex] : "Unknown Finger";
+    }
+
+    // Get capture mode based on finger index
+    // 0-9 = single finger, 10 = left 4 fingers, 11 = right 4 fingers, 12 = thumbs
+    private CaptureMode getCaptureModeForFinger(int fingerIndex) {
+        switch (fingerIndex) {
+            case 10: // PlainLeftFourFingers
+                android.util.Log.e("MainActivity", "📋 Capture mode: LEFT FOUR FINGERS");
+                return CaptureMode.RS_CAPTURE_FLAT_LEFT_FOUR_FINGERS;
+            case 11: // PlainRightFourFingers
+                android.util.Log.e("MainActivity", "📋 Capture mode: RIGHT FOUR FINGERS");
+                return CaptureMode.RS_CAPTURE_FLAT_RIGHT_FOUR_FINGERS;
+            case 12: // PlainThumbs
+                android.util.Log.e("MainActivity", "📋 Capture mode: TWO THUMBS");
+                return CaptureMode.RS_CAPTURE_FLAT_TWO_THUMB;
+            default: // 0-9 = single finger
+                android.util.Log.e("MainActivity", "📋 Capture mode: SINGLE FINGER");
+                return CaptureMode.RS_CAPTURE_FLAT_SINGLE_FINGER;
+        }
+    }
+
+    // Initialize SignalR
+    private void initializeSignalR(String hubUrl) {
+        android.util.Log.d("MainActivity", "=== initializeSignalR CALLED ===");
+        android.util.Log.d("MainActivity", "SignalR Hub URL: " + hubUrl);
+        Logger.d("=== Initializing SignalR ===");
+        Logger.d("SignalR Hub URL: " + hubUrl);
+        
+        try {
+            android.util.Log.d("MainActivity", "Creating SignalRManager...");
+            signalRManager = new SignalRManager(this, hubUrl);
+            android.util.Log.d("MainActivity", "SignalRManager created successfully");
+            Logger.d("SignalRManager created successfully");
+            
+            signalRManager.setListener(new SignalRManager.SignalRListener() {
+                @Override
+                public void onFingerprintRequest(int fingerIndex, String requestId) {
+                    Logger.d("SignalR: Received fingerprint request for index: " + fingerIndex + ", requestId: " + requestId);
+                    android.util.Log.e("MainActivity", "🔔 Fingerprint request - index: " + fingerIndex + ", requestId: " + requestId);
+                    runOnUiThread(() -> {
+                        // Store the request ID for later use when uploading
+                        currentSignalRRequestId = requestId;
+                        handleSingleFingerRequest(fingerIndex);
+                    });
+                }
+                
+                @Override
+                public void onEnrollmentRequest(String requestId) {
+                    Logger.d("SignalR: Received enrollment request, requestId: " + requestId);
+                    android.util.Log.e("MainActivity", "🔔 Enrollment request - requestId: " + requestId);
+                    runOnUiThread(() -> {
+                        // Store the request ID for later use
+                        currentSignalRRequestId = requestId;
+                        handleFullEnrollmentRequest();
+                    });
+                }
+                
+                @Override
+                public void onConnectionStateChanged(boolean connected) {
+                    Logger.d("SignalR: Connection state changed - Connected: " + connected);
+                    runOnUiThread(() -> {
+                        String message = connected ? "SignalR Connected" : "SignalR Disconnected";
+                        Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                        
+                        // Log connection status
+                        if (signalRManager != null) {
+                            signalRManager.logConnectionStatus();
+                        }
+                    });
+                }
+                
+                @Override
+                public void onError(String error) {
+                    Logger.e("SignalR Error: " + error);
+                    runOnUiThread(() -> {
+                        Toast.makeText(MainActivity.this, "SignalR Error: " + error, Toast.LENGTH_LONG).show();
+                        
+                        // Log connection status on error
+                        if (signalRManager != null) {
+                            signalRManager.logConnectionStatus();
+                        }
+                    });
+                }
+            });
+            
+            Logger.d("SignalR listener set, attempting to connect...");
+            signalRManager.connect();
+            
+            // Log connection status after a delay to see if it connects
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                if (signalRManager != null) {
+                    Logger.d("Checking SignalR connection status after 3 seconds...");
+                    signalRManager.logConnectionStatus();
+                    signalRManager.verifyConnectionAndEvents();
+                }
+            }, 3000);
+            
+            // Also verify after 5 seconds
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                if (signalRManager != null) {
+                    Logger.d("Re-verifying SignalR connection after 5 seconds...");
+                    signalRManager.verifyConnectionAndEvents();
+                }
+            }, 5000);
+            
+        } catch (Exception e) {
+            Logger.e("Exception initializing SignalR: " + e.getMessage());
+            e.printStackTrace();
+            Toast.makeText(this, "Failed to initialize SignalR: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    // Handle single finger request
+    private void handleSingleFingerRequest(int fingerIndex) {
+        if (_rsApi == null || !_rsApi.hasSelectedDevice()) {
+            Toast.makeText(this, "Device not connected", Toast.LENGTH_SHORT).show();
+            if (signalRManager != null) {
+                signalRManager.sendError(fingerIndex, "Device not connected");
+            }
+            return;
+        }
+        
+        if (mIsCapturing) {
+            Toast.makeText(this, "Already capturing", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        
+        // Determine if this is a group capture (10, 11, 12) or single finger (0-9)
+        boolean isGroupCapture = (fingerIndex >= 10 && fingerIndex <= 12);
+        
+        isSignalRSingleFingerMode = true; // Used for all SignalR captures
+        isSignalREnrollmentMode = false;
+        currentRequestedFingerIndex = fingerIndex;
+        
+        // Show instruction to user
+        String fingerName = getFingerName(fingerIndex);
+        Toast.makeText(this, "Please place your " + fingerName + " on the scanner", Toast.LENGTH_LONG).show();
+        android.util.Log.e("MainActivity", "🔔 Starting AUTO capture for: " + fingerName + " (index: " + fingerIndex + ", isGroup: " + isGroupCapture + ")");
+        
+        // Set the correct capture mode based on finger index
+        CaptureMode captureMode = getCaptureModeForFinger(fingerIndex);
+        mDeviceDataHandler.setCaptureMode(captureMode);
+        android.util.Log.e("MainActivity", "📋 Capture mode set to: " + captureMode.getCaptureDesc());
+        
+        // Use AUTO capture - automatically captures when finger is detected
+        autoCapture();
+    }
+
+    // Handle full enrollment request
+    private void handleFullEnrollmentRequest() {
+        if (_rsApi == null || !_rsApi.hasSelectedDevice()) {
+            Toast.makeText(this, "Device not connected", Toast.LENGTH_SHORT).show();
+            if (signalRManager != null) {
+                signalRManager.sendEnrollmentError("Device not connected");
+            }
+            return;
+        }
+        
+        if (mIsCapturing) {
+            Toast.makeText(this, "Already capturing", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        
+        isSignalREnrollmentMode = true;
+        isSignalRSingleFingerMode = false;
+        signalREnrollmentStep = 0;
+        signalRCapturedFingers.clear();
+        currentRequestedFingerIndex = -1;
+        
+        // Switch to enrollment tab
+        viewPager.setCurrentItem(1); // Enrollment tab
+        
+        // Start with left 4 fingers
+        Toast.makeText(this, "Please place your LEFT 4 fingers on the scanner", Toast.LENGTH_LONG).show();
+        setEnrollmentEvent(FLAT_FOUR_LEFT);
+    }
+
+    // Check enrollment progress and proceed to next step
+    private void checkAndProceedEnrollmentStep() {
+        if (!isSignalREnrollmentMode) return;
+        
+        switch (signalREnrollmentStep) {
+            case 0: // Left 4 fingers
+                // Check if all 4 left fingers captured (0,1,2,3)
+                if (signalRCapturedFingers.containsKey(0) && signalRCapturedFingers.containsKey(1) &&
+                    signalRCapturedFingers.containsKey(2) && signalRCapturedFingers.containsKey(3)) {
+                    // Wait a bit, then proceed to right 4
+                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                        signalREnrollmentStep = 1;
+                        Toast.makeText(this, "Please place your RIGHT 4 fingers on the scanner", Toast.LENGTH_LONG).show();
+                        setEnrollmentEvent(FLAT_FOUR_RIGHT);
+                    }, 2000);
+                }
+                break;
+                
+            case 1: // Right 4 fingers
+                // Check if all 4 right fingers captured (6,7,8,9)
+                if (signalRCapturedFingers.containsKey(6) && signalRCapturedFingers.containsKey(7) &&
+                    signalRCapturedFingers.containsKey(8) && signalRCapturedFingers.containsKey(9)) {
+                    // Wait a bit, then proceed to thumbs
+                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                        signalREnrollmentStep = 2;
+                        Toast.makeText(this, "Please place your THUMBS on the scanner", Toast.LENGTH_LONG).show();
+                        setEnrollmentEvent(FLAT_TWO_THUMB);
+                    }, 2000);
+                }
+                break;
+                
+            case 2: // Thumbs
+                // Check if both thumbs captured (4,5)
+                if (signalRCapturedFingers.containsKey(4) && signalRCapturedFingers.containsKey(5)) {
+                    // All 10 fingers captured!
+                    signalREnrollmentStep = 3;
+                    isSignalREnrollmentMode = false;
+                    
+                    if (signalRManager != null) {
+                        signalRManager.sendEnrollmentComplete();
+                    }
+                    Toast.makeText(this, "Enrollment complete! All fingerprints sent to frontend.", Toast.LENGTH_LONG).show();
+                }
+                break;
+        }
+    }
 
     public int setTransferMode(boolean _value, boolean _prefchanged)
     {
